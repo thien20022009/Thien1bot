@@ -1,10 +1,11 @@
 const TelegramBot = require("node-telegram-bot-api");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const express = require("express");
 
 const bot = new TelegramBot(process.env.TOKEN, { polling: true });
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
 async function askGemini(question) {
   try {
@@ -31,7 +32,8 @@ bot.on("message", async (msg) => {
 });
 
 console.log("Bot đang chạy...");
-const express = require("express");
+
+// Web server để Railway không tắt
 const app = express();
 
 app.get("/", (req, res) => {
