@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Telegram bot using Gemini AI",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
