@@ -1,11 +1,22 @@
 const TelegramBot = require("node-telegram-bot-api");
-const OpenAI = require("openai");
 
 const bot = new TelegramBot(process.env.TOKEN, { polling: true });
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+async function askGemini(question) {
+  const response = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + process.env.GEMINI_API_KEY,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: question }] }]
+      })
+    }
+  );
+
+  const data = await response.json();
+  return data.candidates[0].content.parts[0].text;
+}
 
 bot.on("message", async (msg) => {
   if (msg.text === "/start") {
@@ -13,18 +24,10 @@ bot.on("message", async (msg) => {
   }
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "Bạn là trợ lý AI, trả lời bằng tiếng Việt." },
-        { role: "user", content: msg.text }
-      ],
-    });
-
-    bot.sendMessage(msg.chat.id, completion.choices[0].message.content);
-
-  } catch (error) {
-    console.error(error);
+    const reply = await askGemini(msg.text);
+    bot.sendMessage(msg.chat.id, reply);
+  } catch (err) {
+    console.log(err);
     bot.sendMessage(msg.chat.id, "Có lỗi xảy ra 😢");
   }
 });
