@@ -1,7 +1,6 @@
 {
   "name": "telegram-gemini-bot",
   "version": "1.0.0",
-  "description": "Telegram bot using Gemini API",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
@@ -11,7 +10,6 @@
     "node": ">=18"
   },
   "dependencies": {
-    "node-telegram-bot-api": "^0.61.0",
-    "node-fetch": "^2.6.7"
+    "node-telegram-bot-api": "^0.61.0"
   }
 }
