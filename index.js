@@ -1,13 +1,15 @@
 const TelegramBot = require("node-telegram-bot-api");
 
-// Node 18+ đã có fetch sẵn
+// Node 18+ đã có fetch sẵn nên KHÔNG cần require node-fetch
+
 const bot = new TelegramBot(process.env.TOKEN, { polling: true });
 
-// ===== Hỏi Gemini =====
+// ===== Hàm gọi Gemini =====
 async function askGemini(question) {
   try {
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + process.env.GEMINI_API_KEY,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
+        process.env.GEMINI_API_KEY,
       {
         method: "POST",
         headers: {
@@ -25,6 +27,7 @@ async function askGemini(question) {
 
     const data = await response.json();
 
+    // Nếu Gemini không trả dữ liệu
     if (!data.candidates || !data.candidates.length) {
       console.log("Gemini lỗi:", data);
       return "Gemini không phản hồi 😢";
@@ -33,14 +36,16 @@ async function askGemini(question) {
     return data.candidates[0].content.parts[0].text;
 
   } catch (error) {
-    console.log("Lỗi:", error);
+    console.log("Lỗi khi gọi Gemini:", error);
     return "Có lỗi xảy ra 😢";
   }
 }
 
-// ===== Nhận tin nhắn =====
+// ===== Khi nhận tin nhắn =====
 bot.on("message", async (msg) => {
   const chatId = msg.chat.id;
+
+  if (!msg.text) return;
 
   if (msg.text === "/start") {
     return bot.sendMessage(chatId, "Bot đang hoạt động 🚀");
