@@ -1,12 +1,17 @@
 {
-  "name": "telegram-bot",
+  "name": "telegram-gemini-bot",
   "version": "1.0.0",
-  "description": "Simple Telegram Bot",
+  "description": "Telegram bot using Gemini API",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node index.js"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-  "node-telegram-bot-api": "^0.61.0"
+    "node-telegram-bot-api": "^0.61.0",
+    "node-fetch": "^2.6.7"
   }
 }
